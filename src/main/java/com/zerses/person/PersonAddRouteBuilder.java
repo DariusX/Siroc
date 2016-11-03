@@ -5,7 +5,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import com.zerses.BodyTransformProcessor;
+import com.zerses.TransformProcessor;
 import com.zerses.StdExceptionProcessor;
 import com.zerses.canonical.PersonAddRequest;
 import com.zerses.canonical.PersonAddResponse;
@@ -25,7 +25,7 @@ public class PersonAddRouteBuilder extends RouteBuilder {
             .id("direct:personAdd")
             .to("log:TEST1?showAll=true")
             .log("body1=${in.body}")
-            .process(new BodyTransformProcessor<PersonAddRequest, Person>(PersonAddRequest.class) {
+            .process(new TransformProcessor<PersonAddRequest, Person>(PersonAddRequest.class) {
 
                 @Override
                 public Person processBody(PersonAddRequest personAddRequest) throws Exception {

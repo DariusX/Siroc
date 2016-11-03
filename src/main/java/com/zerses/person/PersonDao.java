@@ -45,4 +45,18 @@ public class PersonDao {
         }
         return jpaQuery.getResultList();
     }
+    
+    public List<Person> find(Integer personId) {
+        Map<String, Object> parmValues = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select P from Person P  ");
+        sb.append(" where personId = :personId ");
+        parmValues.put("personId", personId);
+
+        final TypedQuery<Person> jpaQuery = em.createQuery(sb.toString(), Person.class);
+        for (Map.Entry<String, Object> nxtParam : parmValues.entrySet()) {
+            jpaQuery.setParameter(nxtParam.getKey(), nxtParam.getValue());
+        }
+        return jpaQuery.getResultList();
+    }
 }

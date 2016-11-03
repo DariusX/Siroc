@@ -3,10 +3,11 @@ package com.zerses.person;
 import java.util.List;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.zerses.BodyTransformProcessor;
+import com.zerses.TransformProcessor;
 import com.zerses.StdExceptionProcessor;
 import com.zerses.canonical.PersonFindRequest;
 import com.zerses.canonical.PersonFindResponse;
@@ -28,7 +29,7 @@ public class PersonFindRouteBuilder extends RouteBuilder {
         from("direct:personFind")
             .id("direct:personFind")
             .log("body=${in.body}")
-            .process(new BodyTransformProcessor<PersonFindRequest, List<Person>>(PersonFindRequest.class) { 
+            .process(new TransformProcessor<PersonFindRequest, List<Person>>(PersonFindRequest.class) { 
                 @Override
                 public List<Person> processBody(PersonFindRequest personFindRequest) throws Exception {
 
@@ -36,6 +37,21 @@ public class PersonFindRouteBuilder extends RouteBuilder {
                 }
             })
             .to("log:TESTn?showAll=true");
+        
+        
+        from("direct:personFindOne")
+        .id("direct:personFindOne")
+        .log("body=${in.body}")
+        .process(new TransformProcessor<Integer, List<Person>>(Integer.class) { 
+            @Override
+            public List<Person> processBody(Integer personId) throws Exception {
+
+                return personDao.find(personId);
+            }
+        })
+        .to("log:TESTn?showAll=true");
+        
 
     }
+
 }

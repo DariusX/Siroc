@@ -43,25 +43,25 @@ public class PersonRouteBuilderRest extends RouteBuilder {
             .param().name("name").type(RestParamType.query).description("Name / Part of name").endParam()
             .outType(PersonFindResponse.class)
             .route()
+            .to("log:From_REST_find?showAll=true")
             .bean(PersonFindRequest.class, "fromHeaders")
             .to("activemq:queue:person.queue?exchangePattern=InOut&receiveTimeout=10000");
 
         rest()
-            .get("/person/{id}")
+            .get("/persons/{personId}")
             .description("Find a specific Person")
             .outType(PersonFindResponse.class)
-            .param().name("id").description("Person ID").dataType("int").endParam()
-            .responseMessage().code(200).message("Person with the given id").endResponseMessage()
+            .param().name("personId").description("Person ID").dataType("int").endParam()
+            .responseMessage().code(200).message("Person with the given ID").endResponseMessage()
             .responseMessage().code(204).message("Person not found").endResponseMessage()
             .route()
             .routeId(this.getClass().getName() + ".personFind_REST_GET")
-            .transform(header("id"))
+            .transform(header("personId"))
             .to("log:TEST_Xfr?showAll=true")
-            .bean(new PersonFindRequest(), "createRequest")
-            .to("direct:personFind");
+            .to("direct:personFindOne");
 
 
-        rest("/person")
+        rest("/persons")
             .post("/add")
             .type(PersonAddRequest.class)
             .outType(PersonAddResponse.class)

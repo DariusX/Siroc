@@ -11,7 +11,7 @@ public class PersonAddRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @DataField(pos=2)
-    private Integer age;
+    private Integer age; 
     
     @DataField(pos=1, defaultValue="", trim=true)
     private String name;
